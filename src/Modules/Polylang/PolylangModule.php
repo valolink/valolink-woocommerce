@@ -27,7 +27,7 @@ final class PolylangModule implements Module, EarlyHooks
 
     public static function early(Settings $settings): void
     {
-        if (function_exists('pll_languages_list')
+        if (function_exists('pll_languages_list') && !Pll::wc_addon_active()
             && $settings->get_module_setting(self::MODULE_ID, 'setup_done', false)) {
             TranslatableTypes::enable();
         }
@@ -48,7 +48,8 @@ final class PolylangModule implements Module, EarlyHooks
             \WP_CLI::add_command('valolink-woo polylang', new Cli($this->settings));
         }
 
-        if (!(new Setup($this->settings))->is_done()) {
+        // The admin page says why nothing runs; switching over is: deactivate the add-on, run setup.
+        if (Pll::wc_addon_active() || !(new Setup($this->settings))->is_done()) {
             return;
         }
 
@@ -60,6 +61,10 @@ final class PolylangModule implements Module, EarlyHooks
                 $this->settings->set_module_setting(self::MODULE_ID, 'flush_rewrite', false);
             });
         }
+
+        // Accesslink's guide tells agents to translate a product's words only:
+        // everything else follows from the original here.
+        add_filter('valolink_accesslink_product_translations_synced', '__return_true');
 
         (new UniqueIds())->register();
         (new ProductSync())->register();

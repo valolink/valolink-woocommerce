@@ -34,6 +34,9 @@ final class Setup
     /** @return array<string, int|string> what setup did */
     public function run(): array
     {
+        if (Pll::wc_addon_active()) {
+            throw new \RuntimeException('Polylang for WooCommerce is active: deactivate it first.');
+        }
         $default = Pll::default_language();
         if ($default === '') {
             throw new \RuntimeException('Polylang has no default language yet: add the languages first.');
@@ -132,7 +135,10 @@ final class Setup
     /**
      * Published translations of the shop, cart, checkout and my account pages in every language
      * that lacks them. Their content is WooCommerce's shortcode or block, the same in every
-     * language; the terms page is left for a real translation.
+     * language; the terms page is left for a real translation. They are copied from the
+     * default-language page, which may not be the one WooCommerce's setting names (a site that
+     * had Polylang for WooCommerce can point at its English pages), because a site's own
+     * additions to the cart or checkout page live on the page its shoppers actually see.
      *
      * @return int pages made
      */
@@ -156,14 +162,17 @@ final class Setup
                 if (isset($group[$lang])) {
                     continue;
                 }
-                $title = $lang === 'en' ? $english : $source->post_title;
+                $from_id = Pll::source($group);
+                $from = $from_id > 0 ? get_post($from_id) : null;
+                $from = $from instanceof \WP_Post ? $from : $source;
+                $title = $lang === 'en' ? $english : $from->post_title;
                 $id = pll_insert_post([
                     'post_type'    => 'page',
                     'post_status'  => 'publish',
                     'post_title'   => $title,
                     'post_name'    => sanitize_title($title),
-                    'post_content' => $source->post_content,
-                    'post_author'  => (int) $source->post_author,
+                    'post_content' => $from->post_content,
+                    'post_author'  => (int) $from->post_author,
                     'translations' => $group,
                 ], $lang);
                 if (is_wp_error($id)) {
@@ -171,7 +180,7 @@ final class Setup
                     continue;
                 }
                 pll_save_post_translations($group + [$lang => (int) $id]);
-                foreach (get_post_meta($source_id) as $key => $values) {
+                foreach (get_post_meta($from->ID) as $key => $values) {
                     if (in_array($key, ['_edit_lock', '_edit_last'], true)) {
                         continue;
                     }

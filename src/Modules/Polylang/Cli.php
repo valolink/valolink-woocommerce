@@ -38,7 +38,11 @@ final class Cli
      */
     public function setup(array $args, array $assoc): void
     {
-        $result = (new Setup($this->settings))->run();
+        try {
+            $result = (new Setup($this->settings))->run();
+        } catch (\RuntimeException $e) {
+            \WP_CLI::error($e->getMessage());
+        }
         \WP_CLI::success(sprintf(
             '%d products and %d terms set to "%s", %d page translations added. Rewrite rules are flushed on the next request.',
             $result['products'],
@@ -59,6 +63,9 @@ final class Cli
      */
     public function sync(array $args, array $assoc): void
     {
+        if (Pll::wc_addon_active()) {
+            \WP_CLI::error('Polylang for WooCommerce is active: deactivate it first.');
+        }
         if (!(new Setup($this->settings))->is_done()) {
             \WP_CLI::error('Run setup first.');
         }

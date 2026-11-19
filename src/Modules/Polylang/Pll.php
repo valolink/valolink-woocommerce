@@ -18,6 +18,15 @@ final class Pll
         return function_exists('pll_languages_list') && function_exists('pll_insert_term') && function_exists('PLL');
     }
 
+    /**
+     * Polylang for WooCommerce, the paid add-on, does the same job: both would map the shop's
+     * pages and sync products. The module stays off while it is active.
+     */
+    public static function wc_addon_active(): bool
+    {
+        return defined('PLLWC_VERSION');
+    }
+
     public static function default_language(): string
     {
         return (string) pll_default_language('slug');

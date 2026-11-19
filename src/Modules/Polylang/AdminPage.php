@@ -49,6 +49,12 @@ final class AdminPage
                 <div class="notice notice-success is-dismissible"><p><?php echo esc_html($notice); ?></p></div>
             <?php endif; ?>
 
+            <?php if (Pll::wc_addon_active()) : ?>
+                <div class="notice notice-warning inline"><p><?php esc_html_e('Polylang for WooCommerce is active, so this module does nothing: both would translate the shop. To switch over, deactivate Polylang for WooCommerce and run setup here right after.', 'valolink-woocommerce'); ?></p></div>
+                </div>
+                <?php return; ?>
+            <?php endif; ?>
+
             <?php if (!$status['setup_done']) : ?>
                 <p><?php esc_html_e('Products are not translatable yet, and nothing in the shop has changed. Setup gives every product, category, tag and attribute term without a language the default language, makes products translatable, and adds translations of the shop, cart, checkout and my account pages.', 'valolink-woocommerce'); ?></p>
                 <p><?php
@@ -119,7 +125,11 @@ final class AdminPage
         check_admin_referer(self::ACTION . '_' . $task);
 
         if ($task === 'setup') {
-            $result = (new Setup($this->settings))->run();
+            try {
+                $result = (new Setup($this->settings))->run();
+            } catch (\RuntimeException $e) {
+                wp_die(esc_html($e->getMessage()), '', ['response' => 409, 'back_link' => true]);
+            }
             $message = sprintf(
                 /* translators: 1: products, 2: terms, 3: language, 4: pages */
                 __('Setup done: %1$d products and %2$d terms set to "%3$s", %4$d page translations added.', 'valolink-woocommerce'),
@@ -129,6 +139,9 @@ final class AdminPage
                 $result['pages'],
             );
         } elseif ($task === 'sync') {
+            if (Pll::wc_addon_active()) {
+                wp_die(esc_html__('Polylang for WooCommerce is active: deactivate it first.', 'valolink-woocommerce'), '', ['response' => 409, 'back_link' => true]);
+            }
             $groups = Cli::sync_all();
             /* translators: %d: number of products */
             $message = sprintf(__('Synced %d translated products.', 'valolink-woocommerce'), $groups);

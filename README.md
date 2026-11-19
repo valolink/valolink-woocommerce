@@ -85,9 +85,21 @@ Off by default; no GeneratePress needed. Code: `src/Modules/Polylang/`.
 so products must have one before they become translatable: **Valolink WooCommerce → Polylang →
 Run setup** (or `wp valolink-woo polylang setup`) gives every product and term without a language
 the default one, makes products translatable, and adds translations of the shop, cart, checkout
-and my account pages. Safe to run again. Then `wp valolink-woo polylang status` for counts per
+and my account pages, copied from the default-language page (with whatever the site added to it,
+e.g. a checkout script). Safe to run again. Then `wp valolink-woo polylang status` for counts per
 language, `wp valolink-woo polylang sync --all` (or the admin button) to re-copy shared data
 after changes made while the module was off.
+
+**Coming from Polylang for WooCommerce.** The module does nothing while that add-on is active
+(both would map the pages and sync products), and setup refuses. Deactivate the add-on and run
+setup right after. Its page translations and products' languages are Polylang's own data, so they
+carry over; WooCommerce's page settings may name the English pages, which keeps working, since the
+storefront maps them to the current language. WP Rocket keeps the cart, checkout and account pages
+out of its cache in every language by itself (its own Polylang support), as long as Polylang stays.
+
+**Accesslink** (Valolink Plugin) translates products, attribute words and terms through its own
+proposals; the module tells its guide (filter `valolink_accesslink_product_translations_synced`)
+that the rest of a product follows from the original here.
 
 ## Usage
 
