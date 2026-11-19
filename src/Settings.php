@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo;
+namespace Valolink\Woo;
 
 /**
  * Single non-autoloaded option holding all module enable flags + per-module settings,
@@ -10,7 +10,7 @@ namespace Valolink\GpWoo;
  */
 final class Settings
 {
-    public const OPTION_KEY = 'valolink_gp_woo_settings';
+    public const OPTION_KEY = 'valolink_woo_settings';
 
     private ?array $cache = null;
 

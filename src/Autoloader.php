@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo;
+namespace Valolink\Woo;
 
 final class Autoloader
 {
-    private const PREFIX = 'Valolink\\GpWoo\\';
+    private const PREFIX = 'Valolink\\Woo\\';
 
     public static function register(): void
     {
@@ -20,7 +20,7 @@ final class Autoloader
         }
 
         $relative = substr($class, strlen(self::PREFIX));
-        $path = VALOLINK_GP_WOO_DIR . 'src/' . str_replace('\\', '/', $relative) . '.php';
+        $path = VALOLINK_WOO_DIR . 'src/' . str_replace('\\', '/', $relative) . '.php';
 
         if (is_file($path)) {
             require_once $path;

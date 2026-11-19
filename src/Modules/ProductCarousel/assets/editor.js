@@ -18,21 +18,21 @@
     var ServerSideRender = serverSideRender;
 
     var SOURCES = [
-        { label: __('Newest', 'valolink-gp-woo'), value: 'newest' },
-        { label: __('On sale', 'valolink-gp-woo'), value: 'sale' },
-        { label: __('Featured', 'valolink-gp-woo'), value: 'featured' },
-        { label: __('Best selling', 'valolink-gp-woo'), value: 'best_selling' },
-        { label: __('Top rated', 'valolink-gp-woo'), value: 'top_rated' },
-        { label: __('Category', 'valolink-gp-woo'), value: 'category' }
+        { label: __('Newest', 'valolink-woocommerce'), value: 'newest' },
+        { label: __('On sale', 'valolink-woocommerce'), value: 'sale' },
+        { label: __('Featured', 'valolink-woocommerce'), value: 'featured' },
+        { label: __('Best selling', 'valolink-woocommerce'), value: 'best_selling' },
+        { label: __('Top rated', 'valolink-woocommerce'), value: 'top_rated' },
+        { label: __('Category', 'valolink-woocommerce'), value: 'category' }
     ];
 
     blocks.registerBlockType('valolink-gp-woo/product-carousel', {
         apiVersion: 3,
-        title: __('Product Carousel', 'valolink-gp-woo'),
-        description: __('A scrollable row of product cards, using the shared product-card template.', 'valolink-gp-woo'),
+        title: __('Product Carousel', 'valolink-woocommerce'),
+        description: __('A scrollable row of product cards, using the shared product-card template.', 'valolink-woocommerce'),
         icon: 'slides',
         category: 'woocommerce',
-        keywords: [__('products', 'valolink-gp-woo'), __('carousel', 'valolink-gp-woo'), __('slider', 'valolink-gp-woo')],
+        keywords: [__('products', 'valolink-woocommerce'), __('carousel', 'valolink-woocommerce'), __('slider', 'valolink-woocommerce')],
         supports: { align: ['wide', 'full'], html: false },
         attributes: {
             source: { type: 'string', default: 'newest' },
@@ -56,7 +56,7 @@
             var controls = [
                 el(SelectControl, {
                     key: 'source',
-                    label: __('Source', 'valolink-gp-woo'),
+                    label: __('Source', 'valolink-woocommerce'),
                     value: a.source,
                     options: SOURCES,
                     onChange: function (v) { set({ source: v }); }
@@ -66,8 +66,8 @@
             if (a.source === 'category') {
                 controls.push(el(TextControl, {
                     key: 'category',
-                    label: __('Category slug', 'valolink-gp-woo'),
-                    help: __('The product_cat slug, e.g. "sale-items".', 'valolink-gp-woo'),
+                    label: __('Category slug', 'valolink-woocommerce'),
+                    help: __('The product_cat slug, e.g. "sale-items".', 'valolink-woocommerce'),
                     value: a.category,
                     onChange: function (v) { set({ category: v }); }
                 }));
@@ -75,7 +75,7 @@
 
             controls.push(el(RangeControl, {
                 key: 'count',
-                label: __('Number of products', 'valolink-gp-woo'),
+                label: __('Number of products', 'valolink-woocommerce'),
                 min: 1, max: 24,
                 value: a.count,
                 onChange: function (v) { set({ count: v }); }
@@ -83,8 +83,8 @@
 
             controls.push(el(RangeControl, {
                 key: 'columns',
-                label: __('Visible columns', 'valolink-gp-woo'),
-                help: __('How many cards fit across the track (desktop).', 'valolink-gp-woo'),
+                label: __('Visible columns', 'valolink-woocommerce'),
+                help: __('How many cards fit across the track (desktop).', 'valolink-woocommerce'),
                 min: 1, max: 6,
                 value: a.columns,
                 onChange: function (v) { set({ columns: v }); }
@@ -92,8 +92,8 @@
 
             controls.push(el(RangeControl, {
                 key: 'cardMinWidth',
-                label: __('Mobile card min width (px)', 'valolink-gp-woo'),
-                help: __('Cards never shrink below this on phones — they scroll instead.', 'valolink-gp-woo'),
+                label: __('Mobile card min width (px)', 'valolink-woocommerce'),
+                help: __('Cards never shrink below this on phones — they scroll instead.', 'valolink-woocommerce'),
                 min: 120, max: 400, step: 10,
                 value: a.cardMinWidth,
                 onChange: function (v) { set({ cardMinWidth: v }); }
@@ -101,46 +101,46 @@
 
             controls.push(el(ToggleControl, {
                 key: 'arrows',
-                label: __('Show arrows', 'valolink-gp-woo'),
+                label: __('Show arrows', 'valolink-woocommerce'),
                 checked: a.showArrows,
                 onChange: function (v) { set({ showArrows: v }); }
             }));
 
             var arrowPanel = (a.showArrows && PanelColorSettings)
                 ? el(PanelColorSettings, {
-                    title: __('Arrows', 'valolink-gp-woo'),
+                    title: __('Arrows', 'valolink-woocommerce'),
                     initialOpen: false,
                     colorSettings: [
                         {
                             value: a.arrowColor,
-                            label: __('Arrow color', 'valolink-gp-woo'),
+                            label: __('Arrow color', 'valolink-woocommerce'),
                             onChange: function (v) { set({ arrowColor: v || '' }); }
                         },
                         {
                             value: a.arrowBackground,
-                            label: __('Background', 'valolink-gp-woo'),
+                            label: __('Background', 'valolink-woocommerce'),
                             onChange: function (v) { set({ arrowBackground: v || '' }); }
                         }
                     ]
                 },
                     el(RangeControl, {
                         key: 'arrowSize',
-                        label: __('Arrow size (px)', 'valolink-gp-woo'),
+                        label: __('Arrow size (px)', 'valolink-woocommerce'),
                         min: 16, max: 80,
                         value: a.arrowSize,
                         onChange: function (v) { set({ arrowSize: v }); }
                     }),
                     el(RangeControl, {
                         key: 'arrowPadding',
-                        label: __('Padding (px)', 'valolink-gp-woo'),
-                        help: __('Space around the arrow — also its click area.', 'valolink-gp-woo'),
+                        label: __('Padding (px)', 'valolink-woocommerce'),
+                        help: __('Space around the arrow — also its click area.', 'valolink-woocommerce'),
                         min: 0, max: 40,
                         value: a.arrowPadding,
                         onChange: function (v) { set({ arrowPadding: v }); }
                     }),
                     el(RangeControl, {
                         key: 'arrowRadius',
-                        label: __('Background radius (px)', 'valolink-gp-woo'),
+                        label: __('Background radius (px)', 'valolink-woocommerce'),
                         min: 0, max: 100,
                         value: a.arrowRadius,
                         onChange: function (v) { set({ arrowRadius: v }); }
@@ -150,7 +150,7 @@
 
             return el(Fragment, {},
                 el(InspectorControls, {},
-                    el(PanelBody, { title: __('Listing', 'valolink-gp-woo'), initialOpen: true }, controls),
+                    el(PanelBody, { title: __('Listing', 'valolink-woocommerce'), initialOpen: true }, controls),
                     arrowPanel
                 ),
                 el('div', blockProps,

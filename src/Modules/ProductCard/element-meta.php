@@ -10,7 +10,7 @@ defined('ABSPATH') || exit;
 add_action('add_meta_boxes', function () {
     add_meta_box(
         'gpwc_product_card',
-        __('WooCommerce Product Card', 'valolink-gp-woo'),
+        __('WooCommerce Product Card', 'valolink-woocommerce'),
         'gpwc_render_card_metabox',
         'gp_elements',
         'side',
@@ -29,10 +29,10 @@ function gpwc_render_card_metabox($post) {
     ?>
     <label>
         <input type="checkbox" name="gpwc_product_card" value="1" <?php checked($enabled); ?> />
-        <?php esc_html_e('Use this Element as the WooCommerce product-loop card.', 'valolink-gp-woo'); ?>
+        <?php esc_html_e('Use this Element as the WooCommerce product-loop card.', 'valolink-woocommerce'); ?>
     </label>
     <p class="description">
-        <?php esc_html_e('Replaces WooCommerce\'s default product card on shop/archive loops.', 'valolink-gp-woo'); ?>
+        <?php esc_html_e('Replaces WooCommerce\'s default product card on shop/archive loops.', 'valolink-woocommerce'); ?>
     </p>
     <?php
 }

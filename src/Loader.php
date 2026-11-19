@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo;
+namespace Valolink\Woo;
 
 /**
  * Instantiates only enabled modules, gates each on should_load(context), then register()s.

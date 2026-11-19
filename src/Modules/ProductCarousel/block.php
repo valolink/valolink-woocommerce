@@ -10,7 +10,8 @@
 
 defined('ABSPATH') || exit;
 
-const GPWC_CAROUSEL_BLOCK = 'valolink-gp-woo/product-carousel';
+// The name predates the rename to valolink-woocommerce. Posts store it, so it stays.
+const GPWC_CAROUSEL_BLOCK ='valolink-gp-woo/product-carousel';
 
 /**
  * Block attribute schema (shared by PHP render + the editor script via ServerSideRender).
@@ -35,8 +36,8 @@ function gpwc_carousel_attributes(): array
 }
 
 add_action('init', function () {
-    $url = VALOLINK_GP_WOO_URL . 'src/Modules/ProductCarousel/assets/';
-    $ver = VALOLINK_GP_WOO_VERSION;
+    $url = VALOLINK_WOO_URL . 'src/Modules/ProductCarousel/assets/';
+    $ver = VALOLINK_WOO_VERSION;
 
     wp_register_style('gpwc-carousel', $url . 'style.css', [], $ver);
     wp_register_script('gpwc-carousel-view', $url . 'view.js', [], $ver, true);
@@ -110,7 +111,7 @@ function gpwc_carousel_render(array $attributes): string
     ?>
     <div <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput ?>>
         <?php if ($show_arrows) : ?>
-            <button type="button" class="gpwc-carousel__arrow gpwc-carousel__arrow--prev" aria-label="<?php esc_attr_e('Previous products', 'valolink-gp-woo'); ?>">
+            <button type="button" class="gpwc-carousel__arrow gpwc-carousel__arrow--prev" aria-label="<?php esc_attr_e('Previous products', 'valolink-woocommerce'); ?>">
                 <?php echo gpwc_carousel_arrow_svg(true); // phpcs:ignore WordPress.Security.EscapeOutput ?>
             </button>
         <?php endif; ?>
@@ -120,7 +121,7 @@ function gpwc_carousel_render(array $attributes): string
         </div>
 
         <?php if ($show_arrows) : ?>
-            <button type="button" class="gpwc-carousel__arrow gpwc-carousel__arrow--next" aria-label="<?php esc_attr_e('Next products', 'valolink-gp-woo'); ?>">
+            <button type="button" class="gpwc-carousel__arrow gpwc-carousel__arrow--next" aria-label="<?php esc_attr_e('Next products', 'valolink-woocommerce'); ?>">
                 <?php echo gpwc_carousel_arrow_svg(false); // phpcs:ignore WordPress.Security.EscapeOutput ?>
             </button>
         <?php endif; ?>

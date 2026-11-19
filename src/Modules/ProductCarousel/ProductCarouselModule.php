@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo\Modules\ProductCarousel;
+namespace Valolink\Woo\Modules\ProductCarousel;
 
-use Valolink\GpWoo\Context;
-use Valolink\GpWoo\Module;
-use Valolink\GpWoo\Settings;
+use Valolink\Woo\Context;
+use Valolink\Woo\Module;
+use Valolink\Woo\Settings;
 
 /**
  * Product Carousel module — a horizontally-scrollable product listing block.

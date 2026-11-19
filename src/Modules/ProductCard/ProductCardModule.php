@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo\Modules\ProductCard;
+namespace Valolink\Woo\Modules\ProductCard;
 
-use Valolink\GpWoo\Context;
-use Valolink\GpWoo\Module;
-use Valolink\GpWoo\Settings;
+use Valolink\Woo\Context;
+use Valolink\Woo\Module;
+use Valolink\Woo\Settings;
 
 /**
  * Product Card module — renders a GeneratePress Element as the WooCommerce product-loop card,

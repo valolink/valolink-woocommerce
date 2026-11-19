@@ -10,9 +10,9 @@ defined('WP_UNINSTALL_PLUGIN') || exit;
 
 require_once __DIR__ . '/src/Autoloader.php';
 
-if (!defined('VALOLINK_GP_WOO_DIR')) {
-    define('VALOLINK_GP_WOO_DIR', plugin_dir_path(__FILE__));
+if (!defined('VALOLINK_WOO_DIR')) {
+    define('VALOLINK_WOO_DIR', plugin_dir_path(__FILE__));
 }
 
-\Valolink\GpWoo\Autoloader::register();
-\Valolink\GpWoo\Plugin::uninstall();
+\Valolink\Woo\Autoloader::register();
+\Valolink\Woo\Plugin::uninstall();

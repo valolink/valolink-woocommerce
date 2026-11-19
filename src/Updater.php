@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo;
+namespace Valolink\Woo;
 
 /**
  * Minimal self-contained GitHub release updater (no third-party library). Hooks WordPress's
  * own update flow so updates surface in wp-admin. Prefers a `.zip` release asset (built by
  * build.sh), falling back to GitHub's source zipball and renaming the unpacked folder to the slug.
  *
- * Inert until a real repo is passed (see VALOLINK_GP_WOO_GITHUB_REPO in the main plugin file).
+ * Inert until a real repo is passed (see VALOLINK_WOO_GITHUB_REPO in the main plugin file).
  */
 final class Updater
 {
@@ -25,12 +25,12 @@ final class Updater
     ) {
         $this->basename  = plugin_basename($plugin_file);
         $this->slug      = dirname($this->basename);
-        $this->cache_key = 'valolink_gp_woo_updater_' . md5($repo);
+        $this->cache_key = 'valolink_woo_updater_' . md5($repo);
         $this->cache_ttl = 6 * HOUR_IN_SECONDS;
     }
 
     /** admin-post action for the manual "Check for updates" link. */
-    public const CHECK_ACTION = 'valolink_gp_woo_check_updates';
+    public const CHECK_ACTION = 'valolink_woo_check_updates';
 
     public function register(): void
     {
@@ -52,8 +52,8 @@ final class Updater
             admin_url('admin-post.php?action=' . self::CHECK_ACTION),
             self::CHECK_ACTION
         );
-        $links['valolink_gp_woo_check'] = '<a href="' . esc_url($url) . '">'
-            . esc_html__('Check for updates', 'valolink-gp-woo') . '</a>';
+        $links['valolink_woo_check'] = '<a href="' . esc_url($url) . '">'
+            . esc_html__('Check for updates', 'valolink-woocommerce') . '</a>';
         return $links;
     }
 
@@ -61,7 +61,7 @@ final class Updater
     public function handle_check(): void
     {
         if (!current_user_can('update_plugins')) {
-            wp_die(esc_html__('Insufficient permissions.', 'valolink-gp-woo'), '', ['response' => 403]);
+            wp_die(esc_html__('Insufficient permissions.', 'valolink-woocommerce'), '', ['response' => 403]);
         }
         check_admin_referer(self::CHECK_ACTION);
 
@@ -69,13 +69,13 @@ final class Updater
         delete_site_transient('update_plugins');   // WordPress's plugin-update cache
         wp_update_plugins();                        // re-check now (re-runs check_update with fresh data)
 
-        wp_safe_redirect(add_query_arg('valolink_gp_woo_checked', '1', self_admin_url('plugins.php')));
+        wp_safe_redirect(add_query_arg('valolink_woo_checked', '1', self_admin_url('plugins.php')));
         exit;
     }
 
     public function maybe_checked_notice(): void
     {
-        if (empty($_GET['valolink_gp_woo_checked'])) {
+        if (empty($_GET['valolink_woo_checked'])) {
             return;
         }
         $screen = function_exists('get_current_screen') ? get_current_screen() : null;
@@ -86,8 +86,8 @@ final class Updater
         $update = get_site_transient('update_plugins');
         $has_update = isset($update->response[$this->basename]);
         $message = $has_update
-            ? __('Valolink GP Woo: an update is available below.', 'valolink-gp-woo')
-            : __('Valolink GP Woo is up to date.', 'valolink-gp-woo');
+            ? __('Valolink WooCommerce: an update is available below.', 'valolink-woocommerce')
+            : __('Valolink WooCommerce is up to date.', 'valolink-woocommerce');
 
         echo '<div class="notice notice-' . ($has_update ? 'warning' : 'success') . ' is-dismissible"><p>'
             . esc_html($message) . '</p></div>';
@@ -104,7 +104,7 @@ final class Updater
             'timeout' => 10,
             'headers' => [
                 'Accept'     => 'application/vnd.github+json',
-                'User-Agent' => 'valolink-gp-woo-updater',
+                'User-Agent' => 'valolink-woocommerce-updater',
             ],
         ]);
 
@@ -175,7 +175,7 @@ final class Updater
         }
 
         return (object) [
-            'name'          => 'Valolink GP Woo',
+            'name'          => 'Valolink WooCommerce',
             'slug'          => $this->slug,
             'version'       => $this->release_version($release),
             'homepage'      => $release['html_url'] ?? '',

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo;
+namespace Valolink\Woo;
 
 /**
  * Contract every module implements. The loader only instantiates enabled modules,

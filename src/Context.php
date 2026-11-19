@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Valolink\GpWoo;
+namespace Valolink\Woo;
 
 /**
  * Describes the current request so modules can skip loading where they're irrelevant.

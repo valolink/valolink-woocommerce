@@ -2,20 +2,20 @@
 #
 # Build a distributable plugin zip in dist/.
 #
-# The archive contains a top-level `valolink-gp-woo/` folder so WordPress installs/updates
+# The archive contains a top-level `valolink-woocommerce/` folder so WordPress installs/updates
 # it under the correct slug. Only runtime files are included (no build/dev cruft).
 #
 # Version source of truth: the git tag (passed by CI as $1, e.g. "0.1.1"). The resolved version
-# is stamped into the shipped plugin header + VALOLINK_GP_WOO_VERSION, so the zip always reports
+# is stamped into the shipped plugin header + VALOLINK_WOO_VERSION, so the zip always reports
 # the version it's tagged as — no need to hand-bump the header before tagging. Falls back to the
 # header's Version for local manual builds.
 #
 # Usage: ./build.sh [version]
-# Output: dist/valolink-gp-woo-<version>.zip
+# Output: dist/valolink-woocommerce-<version>.zip
 
 set -euo pipefail
 
-SLUG="valolink-gp-woo"
+SLUG="valolink-woocommerce"
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MAIN="$ROOT/$SLUG.php"
 
@@ -45,7 +45,7 @@ cp -R "$ROOT/src" "$DEST/"
 
 # Stamp the resolved version into the shipped copy (header + constant).
 sed -i -E "s/^([[:space:]]*\*[[:space:]]*Version:[[:space:]]*).*/\1$VERSION/" "$DEST/$SLUG.php"
-sed -i -E "s/(define\('VALOLINK_GP_WOO_VERSION',[[:space:]]*')[^']*('\);)/\1$VERSION\2/" "$DEST/$SLUG.php"
+sed -i -E "s/(define\('VALOLINK_WOO_VERSION',[[:space:]]*')[^']*('\);)/\1$VERSION\2/" "$DEST/$SLUG.php"
 
 ZIP="$DIST/$SLUG-$VERSION.zip"
 rm -f "$ZIP"
