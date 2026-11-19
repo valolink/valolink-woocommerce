@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Valolink WooCommerce
  * Description:       Modular WooCommerce toolkit (GeneratePress product cards, product carousel, and more). Each feature is a toggleable module with zero footprint when disabled. Replaces Valolink GP Woo.
- * Version:           0.2.0
+ * Version:           0.3.0
  * Requires at least: 6.5
  * Requires PHP:      8.2
  * Author:            Valolink
@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 defined('ABSPATH') || exit;
 
-define('VALOLINK_WOO_VERSION', '0.2.0');
+define('VALOLINK_WOO_VERSION', '0.3.0');
 define('VALOLINK_WOO_FILE', __FILE__);
 define('VALOLINK_WOO_DIR', plugin_dir_path(__FILE__));
 define('VALOLINK_WOO_URL', plugin_dir_url(__FILE__));
@@ -31,3 +31,4 @@ register_activation_hook(__FILE__, [\Valolink\Woo\Plugin::class, 'on_activate'])
 // init avoids the WP 6.7+ "textdomain loaded too early" notice from translated module labels.
 // Priority 5 keeps us ahead of GenerateBlocks' condition registration at init:10.
 add_action('init', [\Valolink\Woo\Plugin::class, 'boot'], 5);
+add_action('plugins_loaded', [\Valolink\Woo\Plugin::class, 'early'], 20);

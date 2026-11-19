@@ -50,6 +50,45 @@ is just regular blocks you wrap around it.
 Requires: WooCommerce. The shared card appears only where a flagged Product Card Element's
 Location matches the page the carousel sits on (otherwise WooCommerce's default card renders).
 
+### Polylang
+WooCommerce for the free Polylang (what Polylang for WooCommerce does in the paid version).
+Off by default; no GeneratePress needed. Code: `src/Modules/Polylang/`.
+
+- **Translatable:** products, product categories, tags, brands and attribute terms (regardless of
+  Polylang's own settings). Variations, shipping classes and WooCommerce's internal taxonomies
+  are shared.
+- **Shared by a product's translations, kept in sync whichever one is edited:** prices and sale
+  dates, SKU and GTIN (allowed to repeat within a family), stock, weight and dimensions,
+  shipping and tax class, images and gallery, product type, visibility, categories, tags,
+  brands, attributes, up-sells and cross-sells, and the variations themselves (made, updated and
+  deleted to match). **Per language:** name, slug, descriptions, purchase note, button text,
+  status, and the names and values of custom attributes.
+- **Custom attributes match by position.** A translation keeps its own words for the attribute and
+  option at the same place in the list; its variations follow. Options added later in the source
+  arrive in the source language until translated. Taxonomy attribute terms (and categories) with
+  no translation get one, named like the original, to be translated in wp-admin.
+- **Stock moved by orders** (`wc_update_product_stock`) is applied to every language as the same
+  change, so simultaneous orders in different languages don't overwrite each other.
+- **A new translation** (Accesslink `create_translation`, Polylang's "+" in wp-admin, anything
+  that links one) copies everything shared from the default-language product at the end of that
+  request. Translations created through Accesslink therefore get their variations here.
+- **Storefront:** cart, checkout, my account and terms resolve to the current language's page;
+  the translated shop page is the product archive; the wc-ajax endpoint and mini-cart fragments
+  keep the language; a cart filled in one language shows the other's products; coupons limited
+  to products or categories accept their translations.
+- **Orders and emails:** an order stores its language (`_valolink_woo_language`); customer emails
+  use it, the shop's own emails the default language, also when sent later from wp-admin. Texts
+  typed into WooCommerce → Settings → Emails are Polylang strings (Languages → Translations,
+  group "WooCommerce emails").
+
+**Setup.** Enabling the module changes nothing yet. Polylang hides content without a language,
+so products must have one before they become translatable: **Valolink WooCommerce → Polylang →
+Run setup** (or `wp valolink-woo polylang setup`) gives every product and term without a language
+the default one, makes products translatable, and adds translations of the shop, cart, checkout
+and my account pages. Safe to run again. Then `wp valolink-woo polylang status` for counts per
+language, `wp valolink-woo polylang sync --all` (or the admin button) to re-copy shared data
+after changes made while the module was off.
+
 ## Usage
 
 1. Create a GeneratePress **Block Element**, design the card with GenerateBlocks.

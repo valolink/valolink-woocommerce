@@ -7,6 +7,7 @@ namespace Valolink\Woo;
 use Valolink\Woo\Admin\SettingsPage;
 use Valolink\Woo\Modules\ProductCard\ProductCardModule;
 use Valolink\Woo\Modules\ProductCarousel\ProductCarouselModule;
+use Valolink\Woo\Modules\Polylang\PolylangModule;
 
 final class Plugin
 {
@@ -39,6 +40,29 @@ final class Plugin
         (new Loader($settings, $registry, Context::detect()))->load();
     }
 
+    /**
+     * Modules with EarlyHooks, as id => class. Listed here rather than read from the manifests,
+     * which translate their labels: too early for that on plugins_loaded. All default to off.
+     */
+    private const EARLY_MODULES = [
+        PolylangModule::MODULE_ID => PolylangModule::class,
+    ];
+
+    /** plugins_loaded: the EarlyHooks of enabled modules. */
+    public static function early(): void
+    {
+        if (defined('VALOLINK_GP_WOO_VERSION')) {
+            return;
+        }
+
+        $settings = new Settings();
+        foreach (self::EARLY_MODULES as $id => $class) {
+            if (is_subclass_of($class, EarlyHooks::class) && $settings->is_module_enabled($id, false)) {
+                $class::early($settings);
+            }
+        }
+    }
+
     public static function register_modules(Registry $registry, Settings $settings): void
     {
         $registry->register(new ModuleManifest(
@@ -56,6 +80,15 @@ final class Plugin
             description: __('A scrollable product-listing block (newest, on sale, category, …) that renders each product through the shared product-card template, so custom listings match the shop loop.', 'valolink-woocommerce'),
             class: ProductCarouselModule::class,
             default_enabled: true,
+            constructor_args: [$settings],
+        ));
+
+        $registry->register(new ModuleManifest(
+            id: PolylangModule::MODULE_ID,
+            label: __('Polylang', 'valolink-woocommerce'),
+            description: __('WooCommerce for the free Polylang: translatable products, categories and attributes whose prices, stock, SKUs, images and variations stay in sync across languages; cart, checkout and emails in the shopper\'s language. Needs Polylang; run its setup under Valolink WooCommerce → Polylang.', 'valolink-woocommerce'),
+            class: PolylangModule::class,
+            default_enabled: false,
             constructor_args: [$settings],
         ));
     }
